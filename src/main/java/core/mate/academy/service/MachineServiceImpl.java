@@ -7,33 +7,36 @@ import core.mate.academy.model.Truck;
 import java.util.Collections;
 import java.util.List;
 
-public class MachineServiceImpl<T extends Machine> implements MachineService<T> {
+public class MachineServiceImpl implements MachineService<Machine> {
+
+    private final MachineProducer<Bulldozer> bulldozerProducer = new BulldozerProducer();
+    private final MachineProducer<Excavator> excavatorProducer = new ExcavatorProducer();
+    private final MachineProducer<Truck> truckProducer = new TruckProducer();
 
     @Override
-    public List<T> getAll(Class<? extends T> type) {
+    public List<Machine> getAll(Class<? extends Machine> type) {
         if (type.equals(Bulldozer.class)) {
-            return (List<T>) new BulldozerProducer().get();
+            return (List<Machine>) (List<?>) bulldozerProducer.get();
         } else if (type.equals(Excavator.class)) {
-            return (List<T>) new ExcavatorProducer().get();
+            return (List<Machine>) (List<?>) excavatorProducer.get();
         } else if (type.equals(Truck.class)) {
-            return (List<T>) new TruckProducer().get();
+            return (List<Machine>) (List<?>) truckProducer.get();
         } else {
             return Collections.emptyList();
         }
     }
 
     @Override
-    public void fill(List<? super T> machines, T value) {
+    public void fill(List<? super Machine> machines, Machine value) {
         for (int i = 0; i < machines.size(); i++) {
             machines.set(i, value);
         }
     }
 
     @Override
-    public void startWorking(List<? extends T> machines) {
-        for (T machine : machines) {
+    public void startWorking(List<? extends Machine> machines) {
+        for (Machine machine : machines) {
             machine.doWork();
         }
     }
 }
-
